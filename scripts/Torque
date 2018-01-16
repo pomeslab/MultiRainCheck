@@ -13,7 +13,7 @@ trap 'rm -f -- "$out_file"' INT TERM HUP EXIT
 LAB=($(for i in "${@:2}"; do echo "${i}" ; done | sort -n))
 
 # Query
-#showq | grep 'banhrich\|ceing\|jjhuang\|huynhqu1\|asrivas\|' > $temp_file
+#showq | grep 'first\|second\|third\|fourth\|fifth\|' > $temp_file
 LM=$(for i in ${LAB[@]}; do echo -ne "${i}\\|" ; done)
 showq | grep "${LM%??}" > $temp_file
 
@@ -56,7 +56,7 @@ done
 #printf "%s \t %s%s \t %s%s \t %s%s \t %s \t %s\n" TOTAL ${RT} "(${RNT})" ${IT} "(${INT})" ${HT} "(${HNT})" $1 $DATE >> $out_file
 #printf "%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \n" TOTAL ${RT} "${RNT}" ${IT} "${INT}" ${HT} "${HNT}" $1 $DATE $TIME >> $out_file
 printf "%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \n" TOTAL ${RT} "${RNT}" ${IT} "${INT}" ${HT} "${HNT}" $1 >> $out_file
- 
+
 
 # Title
 printf "=%.0s"  $(seq 1 $(echo -n $1 | wc -m))

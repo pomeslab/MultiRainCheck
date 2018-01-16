@@ -13,7 +13,7 @@ trap 'rm -f -- "$out_file"' INT TERM HUP EXIT
 LAB=($(for i in "${@:2}"; do echo "${i}" ; done | sort -n))
 
 # Query
-#showq | grep 'banhrich\|ceing\|jjhuang\|huynhqu1\|asrivas\|' > $temp_file
+#showq | grep 'first\|second\|third\|fourth\|fifth\|' > $temp_file
 LM=$(for i in ${LAB[@]}; do echo -ne "${i}\\|" ; done)
 squeue -O username,numcpus,statecompact,reason | grep "${LM%??}" > $temp_file
 

@@ -1,0 +1,78 @@
+#!/bin/bash
+# Arguments: Server_Name Name1 Name2 Name3 ... NameN
+
+# Temporary Files
+temp_file=$(mktemp)
+trap 'rm -f -- "$temp_file"' INT TERM HUP EXIT
+
+out_file=$(mktemp)
+trap 'rm -f -- "$out_file"' INT TERM HUP EXIT
+
+# Lab Member Array (Loaded and Sorted)
+#LAB=( asrivas banhrich cing huynhqu1 jjhuang )
+LAB=($(for i in "${@:2}"; do echo "${i}" ; done | sort -n))
+
+# Query
+#showq | grep 'banhrich\|ceing\|jjhuang\|huynhqu1\|asrivas\|' > $temp_file
+LM=$(for i in ${LAB[@]}; do echo -ne "${i}\\|" ; done)
+showq | grep "${LM%??}" > $temp_file
+
+# Total
+RT=0; IT=0; HT=0; RNT=0; INT=0; HNT=0
+
+#Date (EST)
+#DATE=$(TZ=EST date +%Y-%m-%d)
+#TIME=$(TZ=EST date +"%H:%M")
+
+# Print Column Names
+printf "%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \n" Name Running "---" Idle    "---" Hold    "---" Cluster >> $out_file
+printf "%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \n" "---" "Cores" "Jobs" "Cores" "Jobs" "Cores" "Jobs" "---" >> $out_file
+#printf "%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \n" Name Running "---" Idle    "---" Hold    "---" Cluster Date Time >> $out_file
+#printf "%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \n" "---" "Cores" "Jobs" "Cores" "Jobs" "Cores" "Jobs" "---" "---" "---" >> $out_file
+#printf "%s \t %s%s \t %s%s \t %s%s \t %s \t %s \n" Name Running "(Cores|Job)" Idle "(Cores|Job)" Hold "(Cores|Job)" Cluster Date >> $out_file
+
+# Loop Over Lab Members and Print Results to Console
+for L in "${LAB[@]}"
+do
+    R=$(cat $temp_file | grep $L | grep Running | awk '{s+=$4} END {print s}'); let RT=$RT+${R:-0}
+    I=$(cat $temp_file | grep $L | grep Idle    | awk '{s+=$4} END {print s}'); let IT=$IT+${I:-0}
+    H=$(cat $temp_file | grep $L | grep Hold    | awk '{s+=$4} END {print s}'); let HT=$HT+${H:-0}
+
+    RN=$(cat $temp_file | grep $L | grep Running | wc -l); let RNT=$RNT+${RN:-0}
+    IN=$(cat $temp_file | grep $L | grep Idle    | wc -l); let INT=$INT+${IN:-0}
+    HN=$(cat $temp_file | grep $L | grep Hold    | wc -l); let HNT=$HNT+${HN:-0}
+
+    if [ $((R + I + H)) -ne -1 ]; then
+        #printf "%s \t %s%s \t %s%s \t %s%s \t %s \t %s\n" \
+        #$L ${R:-0} "(${RN:-0})" ${I:-0} "(${IN:-0})" ${H:-0} "(${HN:-0})" $1 $DATE >> $out_file
+
+        #printf  "%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \n" \
+        #$L ${R:-0} "${RN:-0}" ${I:-0} "${IN:-0}" ${H:-0} "${HN:-0}" $1 $DATE $TIME >> $out_file
+
+        printf  "%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \n" \
+        $L ${R:-0} "${RN:-0}" ${I:-0} "${IN:-0}" ${H:-0} "${HN:-0}" $1 >> $out_file
+    fi
+done
+#printf "%s \t %s%s \t %s%s \t %s%s \t %s \t %s\n" TOTAL ${RT} "(${RNT})" ${IT} "(${INT})" ${HT} "(${HNT})" $1 $DATE >> $out_file
+#printf "%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \n" TOTAL ${RT} "${RNT}" ${IT} "${INT}" ${HT} "${HNT}" $1 $DATE $TIME >> $out_file
+printf "%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s \n" TOTAL ${RT} "${RNT}" ${IT} "${INT}" ${HT} "${HNT}" $1 >> $out_file
+ 
+
+# Title
+printf "=%.0s"  $(seq 1 $(echo -n $1 | wc -m))
+printf "\n"
+echo ${1}
+printf "=%.0s"  $(seq 1 $(echo -n $1 | wc -m))
+printf "\n"
+
+# Results
+cat $out_file | column -t
+printf "\n"
+
+
+# Clean Up
+rm $temp_file
+rm $out_file
+
+# Make sure you exit out of host
+exit 1

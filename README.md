@@ -8,6 +8,9 @@ Check the job status (run + queue) on several remote servers at once using Multi
 
 ## File Descriptions
 
+### main.sh
+Execute one iteration of the MultiRainCheck script. This file pulls information entered into the __users__ and __input__ files, executes them on the host servers within a given walltime of 1 minute (60 seconds). A walltime is used to allow the code to progress and ignore any connections that are unstable or offline. If the connection fails, the default value of 0 cores will be enetered for all users.
+
 ### input
 The list of input host server addresses. You must entered your own username associated with that server, a name for the host (no spaces), the host address, and the job check script you wish to run on that server. To prevent entering your password for each host, it is recommended that you have authorized SSH keys uploaded to each server. You can search for tutorials online on how to do this. 
 
@@ -36,15 +39,29 @@ smithjohn2
 =end=
 ```
 
-### main.sh
-Execute one iteration of the MultiRainCheck script. This file pulls information entered into the __users__ and __input__ files, executes them on the host servers within a given walltime of 1 minute (60 seconds). A walltime is used to allow the code to progress and ignore any connections that are unstable or offline. If the connection fails, the default value of 0 cores will be enetered for all users.
+### run.sh (desigend for personal use)
+Iteratively run main.sh. This script creates tables in the a PostgreSQL database if they don't already exist and runs main.sh to collect data from the requested host addresses. The default sleep time between iterations is 30 minutes. Some servers may limit the number of times you can login within a set time. Adjusting the iteration time may be useful. You can do it in two ways:
 
-### query.sql
+You can provide one argument when executing run.sh to change the time. Just provide an integer in minutes.
 
-### run.sh
+```
+./run.sh 60 # 60 minutes of sleep between interations
+```
+
+You can change the default sleep time in the script.
+```
+# Set Time Interval (First Argument or default of 30 mins)
+# min_interval=${1:-30} # old default of 30 minutes
+min_interval=${1:-60} # new 60 minute sleep time
+echo "Collecting Data at an interval of $min_interval minutes"
+```
+
+### query.sql (desigend for personal use)
+PostgreSQL code for handling data inserted into a temporary log table in the database. The log60m table currently isn't functioning as intended. 
+
 
 ## Notes
-1. 
+1. It helps if you have an auto SSH login setup for all host servers. Search online on how to setup auto-logins to servers via SSH.
 2. Originally designed for use on the following supercomputers with their respective resource managers:
 
 | Name         | Resource Manager |

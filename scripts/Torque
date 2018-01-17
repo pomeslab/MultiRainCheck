@@ -9,8 +9,8 @@ out_file=$(mktemp)
 trap 'rm -f -- "$out_file"' INT TERM HUP EXIT
 
 # Lab Member Array (Loaded and Sorted)
-#LAB=( asrivas banhrich cing huynhqu1 jjhuang )
 LAB=($(for i in "${@:2}"; do echo "${i}" ; done | sort -n))
+#LAB=( username1 username2 username3 username4 username5 )
 
 # Query
 #showq | grep 'first\|second\|third\|fourth\|fifth\|' > $temp_file

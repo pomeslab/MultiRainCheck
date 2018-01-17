@@ -15,9 +15,11 @@ Execute one iteration of the MultiRainCheck script. This file pulls information 
 The list of input host server addresses. You must entered your own username associated with that server, a name for the host (no spaces), the host address, and the job check script you wish to run on that server. To prevent entering your password for each host, it is recommended that you have authorized SSH keys uploaded to each server. You can search for tutorials online on how to do this. 
 
 Format: 
+
 ```username hostalias(given name) hostaddress jobcheckscript(inside the /script directory)```
 
 Example: 
+
 ```wilsonjohn Cedar cedar.computecanada.ca Slurm```
 
 ### users

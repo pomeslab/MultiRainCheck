@@ -6,6 +6,10 @@ Check the job status (run + queue) on several remote servers at once using Multi
 2. Easily add new users by providing their alias and username(s).
 3. Designed for supercomputers with the following resource managers: Torque, BQTools, SunGridEngine, Slurm
 
+## Recommendations
+1. It helps if you have an auto SSH login setup for all host servers. Search online on how to setup auto-logins to servers via SSH.
+2. If you want to run this program continuously in the backgroud on a remote Linux computer (e.g. Raspberry Pi), then I recommend you use a program called "screen" to help you run this program via SSH and leave it on after exiting.
+
 ## File Descriptions
 
 ### main.sh
@@ -63,8 +67,7 @@ PostgreSQL code for handling data inserted into a temporary log table in the dat
 
 
 ## Notes
-1. It helps if you have an auto SSH login setup for all host servers. Search online on how to setup auto-logins to servers via SSH.
-2. Originally designed for use on the following supercomputers with their respective resource managers:
+1. Originally designed for use on the following supercomputers with their respective resource managers:
 
 | Name         | Resource Manager |
 | ------------ |:----------------:|

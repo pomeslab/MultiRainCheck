@@ -48,7 +48,7 @@ smithjohn2
 ### run.sh (desigend for personal use)
 Iteratively run main.sh. This script creates tables in the a PostgreSQL database if they don't already exist and runs main.sh to collect data from the requested host addresses. The default sleep time between iterations is 30 minutes. Some servers may limit the number of times you can login within a set time. Adjusting the iteration time may be useful. You can do it in two ways:
 
-You can provide one argument when executing run.sh to change the time. Just provide an integer in minutes.
+You can provide one argument when executing run.sh to change the iteration time. Just provide an integer in minutes.
 
 ```
 ./run.sh 60 # 60 minutes of sleep between interations
